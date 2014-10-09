@@ -144,15 +144,37 @@ unsigned char Rotary::process() {
   // Determine new state from the pins and state table.
   state = ttable[state & 0xf][pinstate];
   // Return emit bits, ie the generated event.
-  if ((state & 0x30) == 16) { pos++; }
-  if ((state & 0x30) == 32) { pos--; }
+  if ((state & 0x30) == 16) { position++; }
+  if ((state & 0x30) == 32) { position--; }
 }
 
 bool Rotary::change() {
-  if (pos != oldPos) {
-    oldPos = pos;
-    return true;
+  if (position != oldPosition) {
+    if (position > oldPosition) {
+      lastChange = 1;
+    } else {
+      lastChange = -1;
+    }
+      oldPosition = position;
+      return true;
   } else {
     return false;
   }
+}
+
+int Rotary::changeDir() {
+  return lastChange;
+}
+
+long Rotary::pos() {
+  if (limit) {
+    return (position % limit + limit) % limit;
+  } else {
+    return position;
+  }
+}
+
+void Rotary::setPos(long _position) {
+  position = _position;
+  oldPosition = _position;
 }

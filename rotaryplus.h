@@ -28,12 +28,17 @@ class Rotary
     // Process pin(s)
     unsigned char process();
     bool change();
-    long pos = 0;
-    long oldPos = -999;
+    long pos();
+    void setPos(long);
+    int changeDir();
+    int lastChange;
+    long limit;
   private:
     unsigned char state;
     unsigned char pin1;
     unsigned char pin2;
+    volatile long position = 0;
+    long oldPosition = -999;
 };
 
 #endif
